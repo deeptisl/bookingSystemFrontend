@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {
     Navbar, Card, Button, Form
 } from 'react-bootstrap';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter, Link, Redirect } from 'react-router-dom';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -29,7 +29,8 @@ class LoginForm extends Component {
             roundTrip: false,
             bgColorOne: 'blue',
             bgColorRound: 'black',
-            cityList: []
+            cityList: [],
+            redirect: false,
 
         };
         this.handleChange = this.handleChange.bind(this);
@@ -81,6 +82,12 @@ class LoginForm extends Component {
     }
 
     render() {
+         if (this.state.redirect) {
+            return <Redirect to={{
+                pathname: '/BookingFrom',
+                state: { bookingdata: this.state }
+            }} />
+        }
         console.log("resut", this.state.cityList)
         return (
             <div >
