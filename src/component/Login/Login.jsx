@@ -72,6 +72,13 @@ class LoginForm extends Component {
         }
     }
 
+    moveToBookingPage() {
+        //console.log("Was Clicked");
+        this.setState({
+            redirect: true
+        })
+
+    }
 
     render() {
         console.log("resut", this.state.cityList)
@@ -160,7 +167,7 @@ class LoginForm extends Component {
                                     />
                                 </div>
                                 <div className="col-sm">
-                                    <Link><Button className='btn btn-primary btn-sm'>BOOK</Button></Link>
+                                    <Link><Button className='btn btn-primary btn-sm' onClick={() => this.moveToBookingPage()}>BOOK</Button></Link>
                                 </div>
                             </div>
                         </div>
