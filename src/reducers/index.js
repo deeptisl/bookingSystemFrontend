@@ -1,7 +1,8 @@
-import { GET_CITIES } from '../constants/action-types';
+import { GET_CITIES, GET_DRIVER } from '../constants/action-types';
 
 const initialState = {
-  citiesList: []
+  citiesList: [],
+  driverList: []
 };
 
 function rootReducer(state = initialState, action) {
@@ -9,6 +10,12 @@ function rootReducer(state = initialState, action) {
     return {
       ...state,
       citiesList: action.payload
+    };
+  }
+  if (action.type === GET_DRIVER) {
+    return {
+      ...state,
+      driverList: action.payload
     };
   }
   return state;

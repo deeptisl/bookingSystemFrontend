@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
 import {
-    Navbar, Form, Button
+    Navbar, Form, Button, Card
 } from 'react-bootstrap';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { DriverList } from '../../action/action';
 import '../Login/Login.css';
 
-export default class BookingForm extends Component {
+function mapDispatchToProps(dispatch) {
+    return {
+        DriverList: () => dispatch(DriverList())
+    };
+}
 
+const mapStateToProps = state => {
+    return {
+        driverList: state.driverList
+    };
+};
+
+class BookingForm extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            driverLists: []
+
+        };
+    }
+
+    async componentWillMount() {
+        await this.props.DriverList().then(() => {
+            this.setState({
+                driverLists: this.props.driverList
+            })
+        });
+    }
 
     render() {
-        console.log(this.props.location);
+        console.log(this.props.location.state);
         return (
             <div >
                 <Navbar bg="dark" variant="dark">
@@ -28,22 +58,14 @@ export default class BookingForm extends Component {
                                             controlId="from"
                                         >
                                             <Form.Control
-                                                className="form-control"
-                                                as="select"
+                                                type="text"
                                                 placeholder="Select Origin"
-                                                onChange={this.handleChange}
+                                                value={this.props.location.state.bookingdata.originCity}
                                                 required
-                                            >
-                                                <option value="ABC">ABC</option>
-                                                <option value="DEF">DEF</option>
-                                                <option value="GHI">GHI</option>
-                                            </Form.Control>
+                                                disabled
+                                            />
+
                                         </Form.Group>
-                                        {/* {this.state.cityList.map(totalCities => {
-                                            return (
-                                                <li style={{ textColor: "Black" }}>{totalCities.CityName}</li>
-                                            );
-                                        })} */}
                                     </Form>
                                 </div>
                             </div>
@@ -54,15 +76,12 @@ export default class BookingForm extends Component {
                                             controlId="to"
                                         >
                                             <Form.Control
-                                                className="form-control"
-                                                as="select"
+                                                type="text"
                                                 placeholder="Select destination"
+                                                value={this.props.location.state.bookingdata.destination}
                                                 required
-                                            >
-                                                <option value="ABC">ABC</option>
-                                                <option value="DEF">DEF</option>
-                                                <option value="GHI">GHI</option>
-                                            </Form.Control>
+                                                disabled
+                                            />
                                         </Form.Group>
                                     </Form>
                                 </div>
@@ -76,31 +95,38 @@ export default class BookingForm extends Component {
                                             <Form.Control
                                                 className="form-control"
                                                 type="date"
+                                                value={this.props.location.state.bookingdata.sourceDate}
                                                 required
                                             />
                                         </Form.Group>
                                     </Form>
-                                    {/* <DatePicker
-                                        placeholderText="Depart Date"
-                                        minDate={new Date()}
-                                        dateFormat="dd-MM-yyyy"
-                                        showMonthDropdown
-                                        showYearDropdown
-                                        dropdownMode="select"
-                                        required
-                                    /> */}
                                 </div>
                             </div>
                             <div className="col-sm">
                                 <div className="searchContainer">
-                                    <Button className='btn btn-secondary' >Modify Search</Button>
+                                    <Button className='btn btn-secondary' disabled>Modify Search</Button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    {/* </Card> */}
+                </div>
+                <div>
+                    {this.state.driverLists.map(totalDrivers => {
+                        return (
+                            <Card >{totalDrivers.firstName} {totalDrivers.lastName}</Card>
+                        );
+                    })}
                 </div>
             </div>
         );
     }
 }
+
+const BookingPage = withRouter(
+    connect(
+        mapStateToProps,
+        mapDispatchToProps
+    )(BookingForm)
+);
+
+export default BookingPage;
