@@ -6,6 +6,15 @@
       background-size: cover;
     }
   
+    .BookingPage{
+      background-color: crimson;
+      height:100px;
+    }
+
+    .searchContainer{
+      margin-top: 10%;
+    }
+    
     .App-Layout {
         /* min-width: 320px;
         max-width: 400px;
