@@ -70,6 +70,10 @@
   align-items: center;
   box-sizing: border-box;
   }
+
+  .not_mapped_style{
+    text-align: center !important;
+  }
   
   
   

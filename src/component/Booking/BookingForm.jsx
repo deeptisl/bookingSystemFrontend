@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import {
-    Navbar, Form, Button, Card
+    Navbar, Form, Button, Col, Row, Table
 } from 'react-bootstrap';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { DriverList } from '../../action/action';
 import '../Login/Login.css';
+import cab from '../../cabseaden.png';
+
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -24,12 +26,22 @@ class BookingForm extends Component {
     constructor() {
         super();
         this.state = {
-            driverLists: []
+            driverLists: [],
+            originCity: "",
+            destinationCity: "",
+            sourceDate: ""
 
         };
     }
 
     async componentWillMount() {
+        if (this.props.location.state) {
+            this.setState({
+                originCity: this.props.location.state.bookingdata.originCity,
+                destinationCity: this.props.location.state.bookingdata.destination,
+                sourceDate: this.props.location.state.bookingdata.sourceDate
+            })
+        }
         await this.props.DriverList().then(() => {
             this.setState({
                 driverLists: this.props.driverList
@@ -38,7 +50,7 @@ class BookingForm extends Component {
     }
 
     render() {
-        console.log(this.props.location.state);
+        console.log(this.props.driverList)
         return (
             <div >
                 <Navbar bg="dark" variant="dark">
@@ -48,7 +60,6 @@ class BookingForm extends Component {
                     </Navbar.Brand>
                 </Navbar>
                 <div className="BookingPage" >
-                    {/* <Card> */}
                     <div className="container">
                         <div className="row" >
                             <div className="col-sm">
@@ -60,7 +71,7 @@ class BookingForm extends Component {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Select Origin"
-                                                value={this.props.location.state.bookingdata.originCity}
+                                                value={this.state.originCity}
                                                 required
                                                 disabled
                                             />
@@ -78,7 +89,7 @@ class BookingForm extends Component {
                                             <Form.Control
                                                 type="text"
                                                 placeholder="Select destination"
-                                                value={this.props.location.state.bookingdata.destination}
+                                                value={this.state.destinationCity}
                                                 required
                                                 disabled
                                             />
@@ -95,7 +106,7 @@ class BookingForm extends Component {
                                             <Form.Control
                                                 className="form-control"
                                                 type="date"
-                                                value={this.props.location.state.bookingdata.sourceDate}
+                                                value={this.state.sourceDate}
                                                 required
                                             />
                                         </Form.Group>
@@ -110,12 +121,58 @@ class BookingForm extends Component {
                         </div>
                     </div>
                 </div>
+                <div style={{ padding: '20px 20px 20px 45%', backgroundColor: 'blue', color: 'white' }}>List Of Drivers</div>
                 <div>
-                    {this.state.driverLists.map(totalDrivers => {
-                        return (
-                            <Card >{totalDrivers.firstName} {totalDrivers.lastName}</Card>
-                        );
-                    })}
+
+                    <Form style={{ marginLeft: '75%' }}>
+                        <Form.Group as={Row} controlId="sortByLang">
+                            <Form.Label column sm={2}>
+                                <b>FILTER:</b>
+                            </Form.Label>
+                            <Col sm={5}>
+                                <Form.Control
+                                    as="select"
+                                >
+                                    <option value="Hindi">Hindi</option>
+                                    <option value="English">English</option>
+                                    <option value="Kannada">Kannada</option>
+                                </Form.Control>
+                            </Col>
+                        </Form.Group>
+                    </Form>
+                </div>
+                <div >
+                    <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th className="not_mapped_style"></th>
+                                <th className="not_mapped_style">Driver Details</th>
+                                <th className="not_mapped_style">Language</th>
+                                <th className="not_mapped_style">Total Fare</th>
+                                <th className="not_mapped_style">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.driverLists.map(totalDrivers => {
+                                return (
+                                    <tr>
+                                        <td className="not_mapped_style"><img src={cab} alt="" /></td>
+                                        <td className="not_mapped_style"><b>{totalDrivers.firstName}  {totalDrivers.lastName} || {totalDrivers.address}</b></td>
+
+                                        <td className="not_mapped_style">
+                                            {totalDrivers.language}
+                                        </td>
+                                        <td className="not_mapped_style">
+                                            6000
+                                            </td>
+                                        <td className="not_mapped_style">
+                                            <Button className='btn btn-primary btn-sm'>Pay Fare</Button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
+                        </tbody>
+                    </Table>
                 </div>
             </div>
         );
